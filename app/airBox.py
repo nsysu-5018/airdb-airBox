@@ -149,7 +149,7 @@ def plot_avg( pol_df ):
         cond = timestamp.dt.time == time(i, 0, 0)
         # Fixed By M123040019: 'append' was removed from pandas 2.0
         #avg_pol_df = avg_pol_df.append(pol_df[cond].mean(), ignore_index=True)
-        avg_pol_df = pd.concat([avg_pol_df, pd.DataFrame(pol_df[cond].mean())], ignore_index=True)
+        avg_pol_df = pd.concat([avg_pol_df, pd.DataFrame([pol_df[cond].mean()])], ignore_index=True)
 
 
 
