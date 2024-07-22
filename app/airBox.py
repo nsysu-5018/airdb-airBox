@@ -147,7 +147,11 @@ def plot_avg( pol_df ):
     timestamp = pol_df.index.to_series()
     for i in range(24):
         cond = timestamp.dt.time == time(i, 0, 0)
-        avg_pol_df = avg_pol_df.append(pol_df[cond].mean(), ignore_index=True)
+        # Fixed By M123040019: 'append' was removed from pandas 2.0
+        #avg_pol_df = avg_pol_df.append(pol_df[cond].mean(), ignore_index=True)
+        avg_pol_df = pd.concat([avg_pol_df, pol_df[cond].mean()], ignore_index=True)
+
+
 
     # Rotate 資料，以目前時間為最後一筆
     dft = avg_pol_df
