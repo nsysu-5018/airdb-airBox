@@ -8,10 +8,16 @@ Build the Docker image:
 docker build -t airbox .
 ```
 
+Set your Google API key:
+
+```bash
+export GOOGLE_API_KEY="your_api_key_here"
+```
+
 Run the container:
 
 ```bash
-docker run -p 8001:8000 --name airbox-container --rm airbox
+docker run -p 8001:8000 --name airbox-container -e GOOGLE_API_KEY=$GOOGLE_API_KEY --rm airbox
 ```
 
 The backend will now be available at: http://127.0.0.1:8001

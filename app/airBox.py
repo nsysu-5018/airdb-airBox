@@ -9,6 +9,7 @@ from datetime import time
 from urllib import request
 import requests
 from bs4 import BeautifulSoup
+import os
 from warnings import simplefilter
 simplefilter(action='ignore')
 
@@ -16,7 +17,7 @@ simplefilter(action='ignore')
 
 # Google API 取得經緯度
 def geocoding(place):
-    api_key = "REMOVED"
+    api_key = os.environ.get("GOOGLE_API_KEY")
     url = "https://maps.googleapis.com/maps/api/geocode/json?address={}&key={}".format(place, api_key)
 
     response = requests.get(url)
