@@ -40,24 +40,18 @@ def geocoding(place):
     latlon = list(latlon.values())
     return latlon
 
-def get_all_device_detail():
-    ssl._create_default_https_context = ssl._create_unverified_context
+def get_air_quality_stations():
+    ministry_of_environment_api_key = os.environ.get('MOE_API_KEY')
+    air_quality_stations_api_url = f'https://data.moenv.gov.tw/api/v2/aqx_p_07?api_key={ministry_of_environment_api_key}'
+    response = requests.get(air_quality_stations_api_url)
+    json_data = response.json()
 
-    url = 'https://pm25.lass-net.org/API-1.0.0/project/airbox/latest/'
-    json_data = request.urlopen(url).read().decode("utf-8")
-    json_data = json.loads(json_data)
-    
-    df = pd.DataFrame.from_dict(json_data["feeds"])
-    
-    pol = ['s_d0','s_d1','s_d2','s_h0','s_t0','c_d0','c_d0_method']
-    cols = ['date','time','area','device_id','name','SiteName','gps_lat','gps_lon','gps_alt','gps_fix','gps_num']
-    df = df[cols]
-    
-    mask = (df['area']=="NA")|(df['area'].isna())
-    df = df[~mask]
-    df = df.sort_values(["area","gps_lat","gps_lon","device_id"])        
-    df = df.reset_index(drop=True)
-    return df
+    # # Uncomment this section to understand the metadata of the stations api response
+    # station_metadata = json_data['fields']
+    # print(station_metadata)
+
+    air_quality_stations = json_data['records']
+    return air_quality_stations
 
 # Calculate distances between all devices and specified latlon, and get the nearest airbox device's id.
 def get_nearest_deviceID_from_latlon(latlon, devices_df):
@@ -193,12 +187,12 @@ def plot_avg( pol_df ):
 
 def run(data):
     my_latlon = geocoding( data.address )
-    devices_df = get_all_device_detail()
-    device_ID = get_nearest_deviceID_from_latlon(my_latlon, devices_df)
-    pol_df, all_df = get_7days_pollution_from_deviceID( device_ID )
-    plot_total( pol_df )
-    plot_avg( pol_df )
-    feats = ['app','area','SiteName','name','device_id','gps_lat','gps_lon']
-    detail = all_df.iloc[0][feats]
-    string = f"地址: {data.address}~緯度: {my_latlon[0]}~經度: {my_latlon[1]}~~APP: {detail['app']}~區域: {detail['area']}~名稱: {detail['SiteName']} / {detail['name']}~裝置 ID: {detail['device_id']}~緯度: {detail['gps_lat']}~經度: {detail['gps_lon']}"
-    return string
+    air_quality_stations = get_air_quality_stations()
+    # device_ID = get_nearest_deviceID_from_latlon(my_latlon, devices_df)
+    # pol_df, all_df = get_7days_pollution_from_deviceID( device_ID )
+    # plot_total( pol_df )
+    # plot_avg( pol_df )
+    # feats = ['app','area','SiteName','name','device_id','gps_lat','gps_lon']
+    # detail = all_df.iloc[0][feats]
+    # string = f"地址: {data.address}~緯度: {my_latlon[0]}~經度: {my_latlon[1]}~~APP: {detail['app']}~區域: {detail['area']}~名稱: {detail['SiteName']} / {detail['name']}~裝置 ID: {detail['device_id']}~緯度: {detail['gps_lat']}~經度: {detail['gps_lon']}"
+    # return string
