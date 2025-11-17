@@ -11,12 +11,14 @@ import requests
 from bs4 import BeautifulSoup
 import os
 from math import radians, sin, cos, atan2, sqrt
+from enum import Enum
 from warnings import simplefilter
 simplefilter(action='ignore')
 
 # how to exe: airBox.py <address>  <Number(random)>
 
 MINISTRY_OF_ENVIRONMENT_API_KEY = os.environ.get('MOE_API_KEY')
+MOE_API_BASE_URL = 'https://data.moenv.gov.tw/api/v2'
 
 # Google API 取得經緯度
 def geocoding(place):
@@ -44,7 +46,7 @@ def geocoding(place):
     return latlon
 
 def get_air_quality_stations():
-    air_quality_stations_api_url = f'https://data.moenv.gov.tw/api/v2/aqx_p_07?api_key={MINISTRY_OF_ENVIRONMENT_API_KEY}'
+    air_quality_stations_api_url = f'{MOE_API_BASE_URL}/aqx_p_07?api_key={MINISTRY_OF_ENVIRONMENT_API_KEY}'
     response = requests.get(air_quality_stations_api_url)
     json_data = response.json()
 
@@ -111,7 +113,7 @@ def get_pollution_from_station(days, station):
     records_per_day = 24
     target_amount = records_per_day * days
     while len(station_records) < target_amount:
-        particulate_matter_api_url = f'https://data.moenv.gov.tw/api/v2/aqx_p_488?api_key={MINISTRY_OF_ENVIRONMENT_API_KEY}&offset={offset}'
+        particulate_matter_api_url = f'{MOE_API_BASE_URL}/aqx_p_488?api_key={MINISTRY_OF_ENVIRONMENT_API_KEY}&offset={offset}'
         response = requests.get(particulate_matter_api_url)
         json_data = response.json()
         records = json_data['records']
@@ -136,6 +138,54 @@ def get_pollution_from_station(days, station):
     #         f.write(f"{record}\n") 
     
     return station_records
+
+class AdditionalData(Enum):
+    temperature = 'temperature'
+    humidity = 'humidity'
+
+def get_additional_data_from_station(days, station, data_name):
+    field_english_name = ''
+    if data_name == AdditionalData.temperature:
+        field_english_name = 'AMB_TEMP'
+    elif data_name == AdditionalData.humidity:
+        field_english_name = 'RH'
+
+    additional_data_records = []
+    offset = 0
+    records_per_day = 24
+    target_amount = records_per_day * days
+    while len(additional_data_records) < target_amount:
+        particulate_matter_api_url = f'{MOE_API_BASE_URL}/aqx_p_35?api_key={MINISTRY_OF_ENVIRONMENT_API_KEY}&offset={offset}'
+        response = requests.get(particulate_matter_api_url)
+        json_data = response.json()
+        records = json_data['records']
+        for record in records:
+            if record['siteid'] == station['siteid'] and record['itemengname'] == field_english_name:
+                filtered_record = {
+                    'county': record['county'],
+                    'sitename': record['sitename'],
+                    'siteid': record['siteid'],
+                    data_name.value: record['concentration'],
+                    'record_time': record['monitordate']
+                }
+                additional_data_records.append(filtered_record)
+                if len(additional_data_records) == target_amount:
+                    break
+        offset += 1000
+    
+    # # Uncomment this section to view the additional data api response 
+    # additional_data_filename = f"{data_name.value}_station_{station['siteid']}.txt"
+    # with open(additional_data_filename, "w") as f:
+    #     for record in additional_data_records:
+    #         f.write(f"{record}\n") 
+    
+    return additional_data_records
+
+def get_temperature_from_station(days, station):
+        return get_additional_data_from_station(days, station, AdditionalData.temperature)
+
+def get_humidity_from_station(days, station):
+        return get_additional_data_from_station(days, station, AdditionalData.humidity)
 
 def plot_total( pol_df ):
     quality = ['great','normal','notWell','bad','danger']
@@ -234,7 +284,10 @@ def run(data):
     address_latlon = geocoding(data.address)
     air_quality_stations = get_air_quality_stations()
     nearest_station = get_nearest_station_from_latlon(address_latlon, air_quality_stations)
-    pollution = get_pollution_from_station(7, nearest_station)
+    past_days = 7
+    pollution = get_pollution_from_station(past_days, nearest_station)
+    temperature_records = get_temperature_from_station(past_days, nearest_station)
+    humidity_records = get_humidity_from_station(past_days, nearest_station)
     # plot_total( pol_df )
     # plot_avg( pol_df )
     # feats = ['app','area','SiteName','name','device_id','gps_lat','gps_lon']
