@@ -1,15 +1,6 @@
 import warnings
 warnings.filterwarnings("ignore")
-import ssl
-import json 
-import pandas as pd
-import matplotlib.pyplot  as plt
-import matplotlib.dates as mdates
-import matplotlib.gridspec as gridspec
-from datetime import datetime, time
-from urllib import request
 import requests
-from bs4 import BeautifulSoup
 import os
 from math import radians, sin, cos, atan2, sqrt
 from enum import Enum
