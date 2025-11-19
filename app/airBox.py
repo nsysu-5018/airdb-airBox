@@ -1,13 +1,9 @@
-import warnings
-warnings.filterwarnings("ignore")
 import requests
 import os
 from math import radians, sin, cos, atan2, sqrt
 from enum import Enum
 from plot import plot_total, plot_pm25_avgerage
 from constants import record_time_key
-from warnings import simplefilter
-simplefilter(action='ignore')
 
 # how to exe: airBox.py <address>  <Number(random)>
 
