@@ -3,7 +3,7 @@ import os
 from math import radians, sin, cos, atan2, sqrt
 from enum import Enum
 from plot import plot_total, plot_pm25_avgerage
-from constants import record_time_key
+from constants import record_time_key, BASE_DIR
 
 # how to exe: airBox.py <address>  <Number(random)>
 
@@ -17,7 +17,7 @@ def geocoding(address):
     response = requests.get(geocoding_url)
 
     # # Uncomment this section to understand the geocode response
-    # with open('geocode.json', 'w') as f:
+    # with open(f'{BASE_DIR}/geocode.json', 'w') as f:
     #     f.write(response.text)
     
     json_data = response.json()
@@ -113,7 +113,7 @@ def get_pollution_from_station(days, station):
         offset += 1000
     
     # # Uncomment this section to view the pollution api response 
-    # pm25_filename = f"pm25_station_{station['siteid']}.txt"
+    # pm25_filename = f"{BASE_DIR}/pm25_station_{station['siteid']}.txt"
     # with open(pm25_filename, "w") as f:
     #     for record in station_records:
     #         f.write(f"{record}\n") 
@@ -155,7 +155,7 @@ def get_additional_data_from_station(days, station, data_name):
         offset += 1000
     
     # # Uncomment this section to view the additional data api response 
-    # additional_data_filename = f"{data_name.value}_station_{station['siteid']}.txt"
+    # additional_data_filename = f"{BASE_DIR}/{data_name.value}_station_{station['siteid']}.txt"
     # with open(additional_data_filename, "w") as f:
     #     for record in additional_data_records:
     #         f.write(f"{record}\n") 
