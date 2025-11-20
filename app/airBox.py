@@ -3,6 +3,7 @@ import os
 from math import radians, sin, cos, atan2, sqrt
 from enum import Enum
 from fastapi import HTTPException
+import json
 from plot import plot_total, plot_pm25_avgerage
 from constants import record_time_key, BASE_DIR
 
@@ -36,7 +37,8 @@ def get_air_quality_stations():
 
     # # Uncomment this section to understand the metadata of the stations api response
     # station_metadata = json_data['fields']
-    # print(station_metadata)
+    # with open(f'{BASE_DIR}/station_metadata.json', 'w', encoding='utf8') as f:
+    #     json.dump(station_metadata, f, indent=2, ensure_ascii=False)
 
     air_quality_stations = json_data['records']
     return air_quality_stations
