@@ -6,7 +6,7 @@ from fastapi import HTTPException
 import json
 import logging
 from plot import plot_total, plot_pm25_avgerage
-from constants import record_time_key, BASE_DIR
+from constants import record_time_key, BASE_DIR, pm25_api_endpoint_mapping
 
 # how to exe: airBox.py <address>  <Number(random)>
 
@@ -105,19 +105,20 @@ def get_pollution_from_station(days, station):
     offset = 0
     records_per_day = 24
     target_amount = records_per_day * days
+    pm25_api_endpoint = pm25_api_endpoint_mapping[station['siteid']]
     while len(station_records) < target_amount:
-        particulate_matter_api_url = f'{MOE_API_BASE_URL}/aqx_p_488?api_key={MINISTRY_OF_ENVIRONMENT_API_KEY}&offset={offset}'
+        particulate_matter_api_url = f'{MOE_API_BASE_URL}/{pm25_api_endpoint}?api_key={MINISTRY_OF_ENVIRONMENT_API_KEY}&offset={offset}'
         response = requests.get(particulate_matter_api_url)
         json_data = response.json()
         records = json_data['records']
         for record in records:
-            if record['siteid'] == station['siteid']:
+            if record['itemengname'] == 'PM2.5':
                 filtered_record = {
                     'county': record['county'],
                     'sitename': record['sitename'],
                     'siteid': record['siteid'],
-                    'pm2.5': record['pm2.5_conc'],
-                    record_time_key: record['datacreationdate']
+                    'pm2.5': record['concentration'],
+                    record_time_key: record['monitordate']
                 }
                 station_records.append(filtered_record)
                 if len(station_records) == target_amount:
