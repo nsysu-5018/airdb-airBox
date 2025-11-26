@@ -1,8 +1,8 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 import airBox
-from constants import total_plot_path, pm25_average_plot_path
+from constants import total_plot_name, total_plot_path, pm25_average_plot_name, pm25_average_plot_path
 
 class InputData(BaseModel):
     address: str
@@ -16,10 +16,14 @@ def run(data: InputData):
     output = airBox.run(data)
     return output
 
-@app.get("/fig_one")
-def get_total_plot():
-    return FileResponse(total_plot_path)
+@app.get("/plots/{plot_name}")
+def get_plot(plot_name:str):
 
-@app.get("/fig_two")
-def get_pm25_average():
-    return FileResponse(pm25_average_plot_path)
+    if plot_name == total_plot_name:
+        return FileResponse(total_plot_path)
+
+    elif plot_name == pm25_average_plot_name:
+        return FileResponse(pm25_average_plot_path)
+
+    # for unknown plot
+    raise HTTPException(status_code=404, detail="Plot not found")

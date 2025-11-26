@@ -2,8 +2,13 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
 
-total_plot_path = f"{BASE_DIR}/total.jpg"
-pm25_average_plot_path = f"{BASE_DIR}/pm25_average.jpg"
+# total plot
+total_plot_name = 'total'
+total_plot_path = f"{BASE_DIR}/{total_plot_name}.jpg"
+
+# pm2.5 average plot
+pm25_average_plot_name = 'pm25_average'
+pm25_average_plot_path = f"{BASE_DIR}/{pm25_average_plot_name}.jpg"
 
 record_time_key = 'record_time'
 
