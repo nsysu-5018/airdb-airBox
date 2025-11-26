@@ -11,8 +11,8 @@ class InputData(BaseModel):
 app = FastAPI()
 
 
-@app.post("/run")
-def run(data: InputData):
+@app.post("/air-quality/query")
+def query_air_quality(data: InputData):
     output = airBox.run(data)
     return output
 

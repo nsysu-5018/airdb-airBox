@@ -52,10 +52,10 @@ docker exec -it airbox-container /bin/bash
 
 ### API Usage
 
-Example: send a request to the /run endpoint:
+Example: send a request to the /air-quality/query endpoint:
 
 ```bash
-curl -X POST "http://127.0.0.1:8001/run" \
+curl -X POST "http://127.0.0.1:8001/air-quality/query" \
   -H "Content-Type: application/json" \
   -d '{"address": "target_address"}'
 ```
