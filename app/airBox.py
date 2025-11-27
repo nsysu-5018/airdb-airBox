@@ -6,7 +6,7 @@ from fastapi import HTTPException
 import json
 import logging
 from plot import plot_total, plot_pm25_avgerage
-from constants import record_time_key, BASE_DIR, pm25_api_endpoint_mapping
+from constants import record_time_key, BASE_DIR, pm25_api_endpoint_mapping, missing_station_specific_api_endpoint_siteId
 
 # how to exe: airBox.py <address>  <Number(random)>
 
@@ -46,7 +46,8 @@ def get_air_quality_stations():
     #     json.dump(station_metadata, f, indent=2, ensure_ascii=False)
 
     air_quality_stations = json_data['records']
-    return air_quality_stations
+    filtered_air_quality_stations = [station for station in air_quality_stations if station['siteid'] not in missing_station_specific_api_endpoint_siteId]
+    return filtered_air_quality_stations
 
 def haversine_distance(lat1, lon1, lat2, lon2):
     # Earth radius in kilometers (use 6371 for km, 3958.8 for miles)

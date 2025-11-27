@@ -93,3 +93,5 @@ pm25_api_endpoint_mapping = {
     # "85": "missing", # 大城
     # "139": "missing", # 員林
   }
+
+missing_station_specific_api_endpoint_siteId = ["85", "139"]
