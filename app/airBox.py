@@ -1,17 +1,14 @@
 import requests
 import os
 from math import radians, sin, cos, atan2, sqrt
-from enum import Enum
 from fastapi import HTTPException
 import json
 import logging
 from plot import plot_total, plot_pm25_avgerage
-from constants import record_time_key, BASE_DIR, pm25_api_endpoint_mapping, missing_station_specific_api_endpoint_siteId
+from constants import record_time_key, past_days, BASE_DIR, pm25_api_endpoint_mapping, missing_station_specific_api_endpoint_siteId, MOE_API_BASE_URL, MINISTRY_OF_ENVIRONMENT_API_KEY, AdditionalData
+from additional import load_additional_data
 
 # how to exe: airBox.py <address>  <Number(random)>
-
-MINISTRY_OF_ENVIRONMENT_API_KEY = os.environ.get('MOE_API_KEY')
-MOE_API_BASE_URL = 'https://data.moenv.gov.tw/api/v2'
 
 logger = logging.getLogger("uvicorn")
 
@@ -134,63 +131,13 @@ def get_pollution_from_station(days, station):
     
     return station_records
 
-class AdditionalData(Enum):
-    temperature = 'temperature'
-    humidity = 'humidity'
-
-def get_additional_data_from_station(days, station, data_name):
-    logger.info(f'airbox - getting {data_name.value}')
-    field_english_name = ''
-    if data_name == AdditionalData.temperature:
-        field_english_name = 'AMB_TEMP'
-    elif data_name == AdditionalData.humidity:
-        field_english_name = 'RH'
-
-    additional_data_records = []
-    offset = 0
-    records_per_day = 24
-    target_amount = records_per_day * days
-    while len(additional_data_records) < target_amount:
-        particulate_matter_api_url = f'{MOE_API_BASE_URL}/aqx_p_35?api_key={MINISTRY_OF_ENVIRONMENT_API_KEY}&offset={offset}'
-        response = requests.get(particulate_matter_api_url)
-        json_data = response.json()
-        records = json_data['records']
-        for record in records:
-            if record['siteid'] == station['siteid'] and record['itemengname'] == field_english_name:
-                filtered_record = {
-                    'county': record['county'],
-                    'sitename': record['sitename'],
-                    'siteid': record['siteid'],
-                    data_name.value: record['concentration'],
-                    record_time_key: record['monitordate']
-                }
-                additional_data_records.append(filtered_record)
-                if len(additional_data_records) == target_amount:
-                    break
-        offset += 1000
-    
-    # # Uncomment this section to view the additional data api response 
-    # additional_data_filename = f"{BASE_DIR}/{data_name.value}_station_{station['siteid']}.txt"
-    # with open(additional_data_filename, "w") as f:
-    #     for record in additional_data_records:
-    #         f.write(f"{record}\n") 
-    
-    return additional_data_records
-
-def get_temperature_from_station(days, station):
-        return get_additional_data_from_station(days, station, AdditionalData.temperature)
-
-def get_humidity_from_station(days, station):
-        return get_additional_data_from_station(days, station, AdditionalData.humidity)
 
 def run(data):
     address_latlon = geocoding(data.address)
     air_quality_stations = get_air_quality_stations()
     nearest_station = get_nearest_station_from_latlon(address_latlon, air_quality_stations)
-    past_days = 7
     pollution = get_pollution_from_station(past_days, nearest_station)
-    temperature_records = get_temperature_from_station(past_days, nearest_station)
-    humidity_records = get_humidity_from_station(past_days, nearest_station)
+    temperature_records, humidity_records = load_additional_data(stationId=nearest_station['siteid'])
     plot_total(pollution, temperature_records, humidity_records)
     plot_pm25_avgerage(pollution)
     return f"地址: {data.address}~緯度: {address_latlon[0]}~經度: {address_latlon[1]}~~空氣品質區:{nearest_station['areaname']}~城市: {nearest_station['county']}~鄉鎮: {nearest_station['township']}~名稱: {nearest_station['sitename']}~測站編號: {nearest_station['siteid']}~緯度: {nearest_station['twd97lat']}~經度: {nearest_station['twd97lon']}"

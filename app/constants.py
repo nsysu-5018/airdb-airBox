@@ -1,4 +1,6 @@
 from pathlib import Path
+from enum import Enum
+import os
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -10,7 +12,21 @@ total_plot_path = f"{BASE_DIR}/{total_plot_name}.jpg"
 pm25_average_plot_name = 'pm25_average'
 pm25_average_plot_path = f"{BASE_DIR}/{pm25_average_plot_name}.jpg"
 
+# Ministry of Environment API
+MINISTRY_OF_ENVIRONMENT_API_KEY = os.environ.get('MOE_API_KEY')
+MOE_API_BASE_URL = 'https://data.moenv.gov.tw/api/v2'
+
 record_time_key = 'record_time'
+past_days = 7
+
+class AdditionalData(Enum):
+    temperature = 'temperature'
+    humidity = 'humidity'
+
+# cache
+cache_folder = f'{BASE_DIR}/cache'
+temperature_folder = f'{cache_folder}/temperature'
+humiditiy_folder = f'{cache_folder}/humidity'
 
 pm25_api_endpoint_mapping = {
     "1": "aqx_p_189", # 基隆
