@@ -110,4 +110,4 @@ station_to_api_endpoint = {
     # "139": "missing", # 員林
   }
 
-missing_station_specific_api_endpoint_siteId = ["85", "139"]
+missing_endpoint_site_ids = ["85", "139"]
