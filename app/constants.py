@@ -28,7 +28,7 @@ cache_folder = f'{BASE_DIR}/cache'
 temperature_folder = f'{cache_folder}/temperature'
 humiditiy_folder = f'{cache_folder}/humidity'
 
-pm25_api_endpoint_mapping = {
+station_to_api_endpoint = {
     "1": "aqx_p_189", # 基隆
     "2": "aqx_p_190", # 汐止
     "3": "aqx_p_191", # 萬里 not found from all stations

@@ -1,6 +1,6 @@
 import os
 from constants import temperature_folder, humiditiy_folder, past_days, \
-    AdditionalData, MOE_API_BASE_URL, MINISTRY_OF_ENVIRONMENT_API_KEY, record_time_key, pm25_api_endpoint_mapping
+    AdditionalData, MOE_API_BASE_URL, MINISTRY_OF_ENVIRONMENT_API_KEY, record_time_key, station_to_api_endpoint
 import logging
 import requests
 import json
@@ -24,7 +24,7 @@ def fetch_and_save_additional_data():
     humidity_data_amount = 0
     offset = 0
     records_per_day = 24
-    station_amount = len(pm25_api_endpoint_mapping.keys())
+    station_amount = len(station_to_api_endpoint.keys())
     target_amount_per_station = records_per_day * past_days
     target_amount = target_amount_per_station * station_amount
     # track consecutive empty fetches to prevent infinite loops

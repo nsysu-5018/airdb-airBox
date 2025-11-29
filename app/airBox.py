@@ -5,7 +5,7 @@ from fastapi import HTTPException
 import json
 import logging
 from plot import plot_total, plot_pm25_avgerage
-from constants import record_time_key, past_days, BASE_DIR, pm25_api_endpoint_mapping, missing_station_specific_api_endpoint_siteId, MOE_API_BASE_URL, MINISTRY_OF_ENVIRONMENT_API_KEY, AdditionalData
+from constants import record_time_key, past_days, BASE_DIR, station_to_api_endpoint, missing_station_specific_api_endpoint_siteId, MOE_API_BASE_URL, MINISTRY_OF_ENVIRONMENT_API_KEY, AdditionalData
 from additional import load_additional_data
 
 # how to exe: airBox.py <address>  <Number(random)>
@@ -103,7 +103,7 @@ def get_pollution_from_station(days, station):
     offset = 0
     records_per_day = 24
     target_amount = records_per_day * days
-    pm25_api_endpoint = pm25_api_endpoint_mapping[station['siteid']]
+    pm25_api_endpoint = station_to_api_endpoint[station['siteid']]
     while len(station_records) < target_amount:
         particulate_matter_api_url = f'{MOE_API_BASE_URL}/{pm25_api_endpoint}?api_key={MINISTRY_OF_ENVIRONMENT_API_KEY}&offset={offset}'
         response = requests.get(particulate_matter_api_url)
