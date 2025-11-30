@@ -5,7 +5,7 @@ from fastapi import HTTPException
 import json
 import logging
 from plot import plot_total, plot_pm25_avgerage
-from constants import record_time_key, past_days, BASE_DIR, station_to_api_endpoint, missing_endpoint_site_ids, MOE_API_BASE_URL, MOE_API_KEY, AdditionalData
+from constants import record_time_key, past_days, records_per_day, BASE_DIR, station_to_api_endpoint, missing_endpoint_site_ids, MOE_API_BASE_URL, MOE_API_KEY, AdditionalData
 from additional import load_additional_data
 
 # how to exe: airBox.py <address>  <Number(random)>
@@ -127,7 +127,6 @@ def get_pollution_from_station(days, station):
     logger.info("airbox - getting pollution data")
     station_records = []
     offset = 0
-    records_per_day = 24
     target_amount = records_per_day * days
     pm25_api_endpoint = station_to_api_endpoint[station['siteid']]
     while len(station_records) < target_amount:
