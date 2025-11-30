@@ -3,7 +3,7 @@ import matplotlib.dates as mdates
 from datetime import datetime
 from collections import defaultdict
 import numpy as np
-from constants import record_time_key, total_plot_path, pm25_average_plot_path, AdditionalData
+from constants import record_time_key, pm25_value_key, total_plot_path, pm25_average_plot_path, AdditionalData
 
 def plot_simple_metric(ax, data, value_key, title, fill_color):
     """
@@ -95,7 +95,7 @@ def plot_total(pollution_data, temperature_data, humidity_data):
     for record in pollution_data:
         try:
             time = datetime.strptime(record[record_time_key], '%Y-%m-%d %H:%M')
-            pm25 = float(record['pm2.5'])
+            pm25 = float(record[pm25_value_key])
             times.append(time)
             pm25_values.append(pm25)
         except (TypeError, ValueError) as e:
@@ -187,7 +187,7 @@ def plot_pm25_avgerage(pollution_data):
             # Parse the record_time to extract the hour
             dt = datetime.strptime(record['record_time'], '%Y-%m-%d %H:%M')
             hour = dt.hour
-            pm25_value = float(record['pm2.5'])
+            pm25_value = float(record[pm25_value_key])
             hourly_data[hour].append(pm25_value)
         except (ValueError, TypeError):
             continue

@@ -5,7 +5,7 @@ from fastapi import HTTPException
 import json
 import logging
 from plot import plot_total, plot_pm25_avgerage
-from constants import record_time_key, past_days, records_per_day, BASE_DIR, station_to_api_endpoint, missing_endpoint_site_ids, MOE_API_BASE_URL, MOE_API_KEY, AdditionalData
+from constants import record_time_key, pm25_value_key, past_days, records_per_day, BASE_DIR, station_to_api_endpoint, missing_endpoint_site_ids, MOE_API_BASE_URL, MOE_API_KEY, AdditionalData
 from additional import load_additional_data
 
 # how to exe: airBox.py <address>  <Number(random)>
@@ -120,7 +120,7 @@ def get_pollution_from_station(days, station):
         - 'county': The county of the monitoring station.
         - 'sitename': Human-readable station name.
         - 'siteid': Station identifier.
-        - 'pm2.5': PM2.5 concentration value.
+        - pm25_value_key: PM2.5 concentration value.
         - record_time_key: Timestamp associated with the measurement.
     """
 
@@ -140,7 +140,7 @@ def get_pollution_from_station(days, station):
                     'county': record['county'],
                     'sitename': record['sitename'],
                     'siteid': record['siteid'],
-                    'pm2.5': record['concentration'],
+                    pm25_value_key: record['concentration'],
                     record_time_key: record['monitordate']
                 }
                 station_records.append(filtered_record)

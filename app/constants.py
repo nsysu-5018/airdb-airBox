@@ -17,6 +17,7 @@ MOE_API_KEY = os.environ.get('MOE_API_KEY')
 MOE_API_BASE_URL = 'https://data.moenv.gov.tw/api/v2'
 
 record_time_key = 'record_time'
+pm25_value_key = 'pm2.5'
 
 past_days = 7
 records_per_day = 24
