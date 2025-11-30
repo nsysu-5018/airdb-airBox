@@ -165,4 +165,4 @@ def run(data):
     temperature_records, humidity_records = load_additional_data(stationId=nearest_station['siteid'])
     plot_total(pollution, temperature_records, humidity_records)
     plot_pm25_avgerage(pollution)
-    return f"地址: {data.address}~緯度: {address_latlon[0]}~經度: {address_latlon[1]}~~空氣品質區:{nearest_station['areaname']}~城市: {nearest_station['county']}~鄉鎮: {nearest_station['township']}~名稱: {nearest_station['sitename']}~測站編號: {nearest_station['siteid']}~緯度: {nearest_station['twd97lat']}~經度: {nearest_station['twd97lon']}"
+    return f"地址: {data.address}~緯度: {address_latlon[0]}~經度: {address_latlon[1]}~~空氣品質區:{nearest_station['areaname']}~城市: {nearest_station['county']}~鄉鎮: {nearest_station['township']}~測站名稱: {nearest_station['sitename']}~測站編號: {nearest_station['siteid']}~緯度: {nearest_station['twd97lat']}~經度: {nearest_station['twd97lon']}"
