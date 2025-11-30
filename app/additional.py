@@ -1,6 +1,6 @@
 import os
 from constants import temperature_folder, humiditiy_folder, past_days, \
-    AdditionalData, MOE_API_BASE_URL, MINISTRY_OF_ENVIRONMENT_API_KEY, record_time_key, station_to_api_endpoint
+    AdditionalData, MOE_API_BASE_URL, MOE_API_KEY, record_time_key, station_to_api_endpoint
 import logging
 import requests
 import json
@@ -65,7 +65,7 @@ def fetch_and_save_additional_data():
         initial_temperature_amount = temperature_data_amount
         initial_humidity_amount = humidity_data_amount
 
-        particulate_matter_api_url = f'{MOE_API_BASE_URL}/aqx_p_35?api_key={MINISTRY_OF_ENVIRONMENT_API_KEY}&offset={offset}'
+        particulate_matter_api_url = f'{MOE_API_BASE_URL}/aqx_p_35?api_key={MOE_API_KEY}&offset={offset}'
         response = requests.get(particulate_matter_api_url)
         json_data = response.json()
         records = json_data['records']

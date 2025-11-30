@@ -13,7 +13,7 @@ pm25_average_plot_name = 'pm25_average'
 pm25_average_plot_path = f"{BASE_DIR}/{pm25_average_plot_name}.jpg"
 
 # Ministry of Environment API
-MINISTRY_OF_ENVIRONMENT_API_KEY = os.environ.get('MOE_API_KEY')
+MOE_API_KEY = os.environ.get('MOE_API_KEY')
 MOE_API_BASE_URL = 'https://data.moenv.gov.tw/api/v2'
 
 record_time_key = 'record_time'
