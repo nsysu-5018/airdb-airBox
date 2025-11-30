@@ -52,18 +52,18 @@ def fetch_and_save_additional_data():
                 continue
 
             # extract data
-            if record['itemengname'] == 'AMB_TEMP':
+            if record['itemengname'] == AdditionalData.temperature.MOE_API_value_key:
                 new_record = {
                     'siteid': record['siteid'],
-                    'temperature': record['concentration'],
+                    AdditionalData.temperature.data_value_key: record['concentration'],
                     record_time_key: record['monitordate']
                 }
                 temperature_data[record['siteid']].append(new_record)
                 temperature_data_amount = temperature_data_amount + 1
-            elif record['itemengname'] == 'RH':
+            elif record['itemengname'] == AdditionalData.humidity.MOE_API_value_key:
                 new_record = {
                     'siteid': record['siteid'],
-                    'humidity': record['concentration'],
+                    AdditionalData.humidity.data_value_key: record['concentration'],
                     record_time_key: record['monitordate']
                 }
                 humidity_data[record['siteid']].append(new_record)

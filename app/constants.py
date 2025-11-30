@@ -20,8 +20,13 @@ record_time_key = 'record_time'
 past_days = 7
 
 class AdditionalData(Enum):
-    temperature = 'temperature'
-    humidity = 'humidity'
+    def __init__(self, MOE_API_value_key, data_value_key, plot_title):
+        self.MOE_API_value_key = MOE_API_value_key
+        self.data_value_key = data_value_key
+        self.plot_title = plot_title
+    
+    temperature = 'AMB_TEMP', 'temperature', 'Temperature'
+    humidity = 'RH', 'humidity', 'Humidity'
 
 # cache
 cache_folder = f'{BASE_DIR}/cache'

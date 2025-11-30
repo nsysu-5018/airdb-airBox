@@ -3,7 +3,7 @@ import matplotlib.dates as mdates
 from datetime import datetime
 from collections import defaultdict
 import numpy as np
-from constants import record_time_key, total_plot_path, pm25_average_plot_path
+from constants import record_time_key, total_plot_path, pm25_average_plot_path, AdditionalData
 
 def plot_simple_metric(ax, data, value_key, title, fill_color):
     """
@@ -111,10 +111,12 @@ def plot_total(pollution_data, temperature_data, humidity_data):
     ax1.set_ylim(0, max(pm25_values) * 1.1)
 
     ## Temperature
-    plot_simple_metric(ax2, temperature_data, 'temperature', 'Temperature', '#ffc866')
+    plot_simple_metric(ax2, temperature_data, AdditionalData.temperature.data_value_key,
+                       AdditionalData.temperature.plot_title, '#ffc866')
 
     ### Humidity
-    plot_simple_metric(ax3, humidity_data, 'humidity', 'Humidity', '#7acfce')
+    plot_simple_metric(ax3, humidity_data, AdditionalData.humidity.data_value_key, 
+                       AdditionalData.humidity.plot_title, '#7acfce')
 
     plt.tight_layout()
     plt.savefig(total_plot_path, bbox_inches='tight', dpi=300)
