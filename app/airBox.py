@@ -98,6 +98,32 @@ def get_nearest_station_from_latlon(latlon, air_quality_stations):
 
 
 def get_pollution_from_station(days, station):
+    """
+    Retrieve PM2.5 pollution records for a specific monitoring station over a given
+    number of days.
+
+    This function queries the Ministry of Environment API in batches and extracts
+    hourly PM2.5 measurements for the requested station. It continues fetching data
+    until it has collected the expected number of records.
+
+    Parameters
+    ----------
+    days : int
+        Number of days of PM2.5 data to retrieve.
+    station : dict
+        Dictionary describing the monitoring station.
+
+    Returns
+    -------
+    list of dict
+        A list of records, each containing:
+        - 'county': The county of the monitoring station.
+        - 'sitename': Human-readable station name.
+        - 'siteid': Station identifier.
+        - 'pm2.5': PM2.5 concentration value.
+        - record_time_key: Timestamp associated with the measurement.
+    """
+
     logger.info("airbox - getting pollution data")
     station_records = []
     offset = 0

@@ -12,6 +12,31 @@ logger = logging.getLogger("uvicorn")
 
 
 def fetch_and_save_additional_data():
+    """
+    Fetches recent temperature and humidity measurements from the Ministry of Environment
+    API, organizes them by station, and saves them into per-station JSON files.
+
+    The function performs the following steps:
+
+    1. Creates local directories used to cache temperature and humidity data.
+    2. Iteratively queries the API in batches using an offset parameter, collecting:
+       - Temperature records
+       - Humidity records
+       Only data within the specified past time window is retained.
+    3. Stops fetching once enough measurements are gathered or when a series of
+       empty fetch attempts suggests no more relevant data is available.
+    4. Writes all collected records into separate JSON files, one file per station
+       for temperature and one for humidity.
+
+    Behavior details:
+    - Each station is expected to provide a fixed number of hourly records per day,
+      multiplied by the number of past days requested.
+
+    Output:
+        Creates JSON files in the configured temperature and humidity folders.
+        Each file contains a list of records for a specific station.
+    """
+
     logger.info(f'airbox - fetch and save additional data')
 
     # create folder for cached data

@@ -49,6 +49,38 @@ def plot_simple_metric(ax, data, value_key, title, fill_color):
         label.set_ha('center')
 
 def plot_total(pollution_data, temperature_data, humidity_data):
+    """
+    Generate a composite environmental chart summarizing PM2.5, temperature,
+    and humidity trends over time.
+
+    Parameters
+    ----------
+    pollution_data : list of dict
+        Records containing timestamped pollutant values.
+    temperature_data : list of dict
+        Timestamped temperature records passed to `plot_simple_metric`.
+    humidity_data : list of dict
+        Timestamped humidity records passed to `plot_simple_metric`.
+
+    Description
+    -----------
+    The function creates a figure with three subplots:
+        • A full-width panel showing PM2.5 concentrations.  
+          Data are parsed, sorted by time, and drawn with color-coded
+          filled regions corresponding to commonly used health thresholds.
+          A reference line highlights specific breakpoints, and the
+          metric is plotted as a line on top.
+        • A lower-left panel displaying temperature trends using the
+          generic `plot_simple_metric` helper.
+        • A lower-right panel displaying humidity trends, also using
+          `plot_simple_metric`.
+
+    Returns
+    -------
+    None
+        The function saves the plot to a local file and does not return a value.
+    """
+
     fig = plt.figure(figsize=(18, 6))
         # --- AXES LAYOUT ---
     ax1 = fig.add_subplot(2, 1, 1)       # full-width top row
@@ -123,6 +155,30 @@ def plot_total(pollution_data, temperature_data, humidity_data):
     plt.close()
 
 def plot_pm25_avgerage(pollution_data):
+    """
+    Generate and save a 24-hour PM2.5 average plot based on a 7-day dataset.
+
+    This function processes a list of pollution records, groups the
+    measurements by hour across all days, computes hourly averages, and produces
+    a line plot with shaded regions indicating values below or above a fixed
+    threshold. A green fill highlights values up to the threshold, while a yellow
+    fill marks segments exceeding it.
+
+    Parameters
+    ----------
+    pollution_data : list of dict
+        Records containing timestamped pollutant values.
+
+    Returns
+    -------
+    None
+        The function saves the PM2.5 hourly-average plot to a local file and does not return a value.
+
+    Notes
+    -----
+    • Invalid or unparsable records are silently skipped.
+    """
+
     # Group PM2.5 values by hour
     hourly_data = defaultdict(list)
 
