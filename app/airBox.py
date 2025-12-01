@@ -12,7 +12,7 @@ logger = logging.getLogger("uvicorn")
 
 # Google API 取得經緯度
 def geocoding(address):
-    logger.info("airbox - getting latitude and longtitude for address")
+    logger.info(f"airbox - getting latitude and longtitude for {address}")
     google_api_key = os.environ.get("GOOGLE_API_KEY")
     geocoding_url = f'https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={google_api_key}'
     response = requests.get(geocoding_url)
