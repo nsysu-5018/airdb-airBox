@@ -10,8 +10,26 @@ from additional import load_additional_data
 
 logger = logging.getLogger("uvicorn")
 
-# Google API 取得經緯度
 def geocoding(address):
+    """
+    Retrieve geographic coordinates for a given address using the Google Geocoding API.
+
+    Parameters
+    ----------
+    address : str
+        The address to be converted into latitude and longitude.
+
+    Returns
+    -------
+    list[float]
+        A list containing two floating-point numbers: [latitude, longitude].
+
+    Raises
+    ------
+    HTTPException
+        If the API returns no results for the provided address, indicating that
+        the address could not be resolved.
+    """
     logger.info(f"airbox - getting latitude and longtitude for {address}")
     google_api_key = os.environ.get("GOOGLE_API_KEY")
     geocoding_url = f'https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={google_api_key}'
