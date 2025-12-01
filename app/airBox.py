@@ -8,8 +8,6 @@ from plot import plot_total, plot_pm25_avgerage
 from constants import record_time_key, pm25_value_key, past_days, records_per_day, BASE_DIR, station_to_api_endpoint, missing_endpoint_site_ids, MOE_API_BASE_URL, MOE_API_KEY, AdditionalData
 from additional import load_additional_data
 
-# how to exe: airBox.py <address>  <Number(random)>
-
 logger = logging.getLogger("uvicorn")
 
 # Google API 取得經緯度
