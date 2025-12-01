@@ -39,7 +39,7 @@ humiditiy_folder = f'{cache_folder}/humidity'
 station_to_api_endpoint = {
     "1": "aqx_p_189", # 基隆
     "2": "aqx_p_190", # 汐止
-    "3": "aqx_p_191", # 萬里 not found from all stations
+    # "3": "aqx_p_191", # 萬里, stopped air-quality monitoring since May 1, 2025
     "4": "aqx_p_192", # 新店
     "5": "aqx_p_193", # 土城
     "6": "aqx_p_194", # 板橋
