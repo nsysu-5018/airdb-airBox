@@ -66,8 +66,7 @@ def fetch_and_save_additional_data():
 
         particulate_matter_api_url = f'{MOE_API_BASE_URL}/aqx_p_35?api_key={MOE_API_KEY}&offset={offset}'
         response = requests.get(particulate_matter_api_url)
-        json_data = response.json()
-        records = json_data['records']
+        records = response.json()
         for record in records:            
             # check if record time is within past_days 
             record_datetime = datetime.strptime(record['monitordate'], '%Y-%m-%d %H:%M')

@@ -51,14 +51,12 @@ def get_air_quality_stations():
     logger.info("airbox - getting air quality stations")
     air_quality_stations_api_url = f'{MOE_API_BASE_URL}/aqx_p_07?api_key={MOE_API_KEY}'
     response = requests.get(air_quality_stations_api_url)
-    json_data = response.json()
+    air_quality_stations = response.json()
 
-    # # Uncomment this section to understand the metadata of the stations api response
-    # station_metadata = json_data['fields']
-    # with open(f'{BASE_DIR}/station_metadata.json', 'w', encoding='utf8') as f:
-    #     json.dump(station_metadata, f, indent=2, ensure_ascii=False)
-
-    air_quality_stations = json_data['records']
+    # # Uncomment this section to understand response of the stations api
+    # with open(f'{BASE_DIR}/all_stations.json', 'w', encoding='utf8') as f:
+    #     json.dump(air_quality_stations, f, indent=2, ensure_ascii=False)
+       
     filtered_air_quality_stations = [station for station in air_quality_stations if station['siteid'] not in missing_endpoint_site_ids]
     return filtered_air_quality_stations
 
@@ -148,8 +146,7 @@ def get_pollution_from_station(days, station):
     while len(station_records) < target_amount:
         particulate_matter_api_url = f'{MOE_API_BASE_URL}/{pm25_api_endpoint}?api_key={MOE_API_KEY}&offset={offset}'
         response = requests.get(particulate_matter_api_url)
-        json_data = response.json()
-        records = json_data['records']
+        records = response.json()
         for record in records:
             if record['itemengname'] == 'PM2.5':
                 filtered_record = {
