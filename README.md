@@ -57,5 +57,5 @@ Example: send a request to the /air-quality/query endpoint:
 ```bash
 curl -X POST "http://127.0.0.1:8001/air-quality/query" \
   -H "Content-Type: application/json" \
-  -d '{"address": "target_address"}'
+  -d '{"address": "高雄市鼓山區蓮海路70號"}'
 ```
