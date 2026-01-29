@@ -1,6 +1,6 @@
 import os
 from constants import temperature_folder, humiditiy_folder, past_days, records_per_day, \
-    AdditionalData, MOE_API_BASE_URL, MOE_API_KEY, record_time_key, station_to_api_endpoint
+    AdditionalData, MOE_API_BASE_URL, MOE_API_KEY, record_time_key, station_to_api_endpoint, validate_moe_api_key
 import logging
 import requests
 import json
@@ -38,6 +38,8 @@ def fetch_and_save_additional_data():
     """
 
     logger.info(f'airbox - fetch and save additional data')
+
+    validate_moe_api_key()
 
     # create folder for cached data
     os.makedirs(temperature_folder, exist_ok=True)

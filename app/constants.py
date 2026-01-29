@@ -1,6 +1,10 @@
 from pathlib import Path
 from enum import Enum
 import os
+import logging
+from fastapi import HTTPException
+
+logger = logging.getLogger("uvicorn")
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -14,6 +18,10 @@ pm25_average_plot_path = f"{BASE_DIR}/{pm25_average_plot_name}.jpg"
 
 # Ministry of Environment API
 MOE_API_KEY = os.environ.get('MOE_API_KEY')
+def validate_moe_api_key():
+    if MOE_API_KEY is None or MOE_API_KEY=='':
+        logger.error("airbox - MOE API key not found")
+        raise HTTPException(status_code=503, detail='MOE API key not found')
 MOE_API_BASE_URL = 'https://data.moenv.gov.tw/api/v2'
 
 record_time_key = 'record_time'

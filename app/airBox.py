@@ -5,7 +5,7 @@ from fastapi import HTTPException
 import json
 import logging
 from plot import plot_total, plot_pm25_avgerage
-from constants import record_time_key, pm25_value_key, past_days, records_per_day, BASE_DIR, station_to_api_endpoint, missing_endpoint_site_ids, MOE_API_BASE_URL, MOE_API_KEY, AdditionalData
+from constants import record_time_key, pm25_value_key, past_days, records_per_day, BASE_DIR, station_to_api_endpoint, missing_endpoint_site_ids, MOE_API_BASE_URL, MOE_API_KEY, AdditionalData, validate_moe_api_key
 from additional import load_additional_data
 
 logger = logging.getLogger("uvicorn")
@@ -32,6 +32,9 @@ def geocoding(address):
     """
     logger.info(f"airbox - getting latitude and longtitude for {address}")
     google_api_key = os.environ.get("GOOGLE_API_KEY")
+    if google_api_key is None or google_api_key=='':
+        logger.error("airbox - Google API key not found")
+        raise HTTPException(status_code=503, detail='Google API key not found')
     geocoding_url = f'https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={google_api_key}'
     response = requests.get(geocoding_url)
 
@@ -49,6 +52,7 @@ def geocoding(address):
 
 def get_air_quality_stations():
     logger.info("airbox - getting air quality stations")
+    validate_moe_api_key()
     air_quality_stations_api_url = f'{MOE_API_BASE_URL}/aqx_p_07?api_key={MOE_API_KEY}'
     response = requests.get(air_quality_stations_api_url)
     air_quality_stations = response.json()
@@ -139,6 +143,7 @@ def get_pollution_from_station(days, station):
     """
 
     logger.info("airbox - getting pollution data")
+    validate_moe_api_key()
     station_records = []
     offset = 0
     target_amount = records_per_day * days
