@@ -3,12 +3,11 @@ import os
 from math import radians, sin, cos, atan2, sqrt
 from fastapi import HTTPException
 import json
-import logging
 from plot import plot_total, plot_pm25_avgerage
-from constants import record_time_key, pm25_value_key, past_days, records_per_day, BASE_DIR, station_to_api_endpoint, missing_endpoint_site_ids, MOE_API_BASE_URL, MOE_API_KEY, AdditionalData, validate_moe_api_key
+from constants import record_time_key, pm25_value_key, past_days, records_per_day, BASE_DIR, station_to_api_endpoint, \
+    missing_endpoint_site_ids, MOE_API_BASE_URL, MOE_API_KEY, AdditionalData, validate_moe_api_key, logger
 from additional import load_additional_data
 
-logger = logging.getLogger("uvicorn")
 
 def geocoding(address):
     """

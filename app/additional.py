@@ -1,14 +1,11 @@
 import os
 from constants import temperature_folder, humiditiy_folder, past_days, records_per_day, \
-    AdditionalData, MOE_API_BASE_URL, MOE_API_KEY, record_time_key, station_to_api_endpoint, validate_moe_api_key
-import logging
+    AdditionalData, MOE_API_BASE_URL, MOE_API_KEY, record_time_key, station_to_api_endpoint, validate_moe_api_key, logger
 import requests
 import json
 from datetime import datetime, timedelta
 import zoneinfo
 from collections import defaultdict
-
-logger = logging.getLogger("uvicorn")
 
 
 def fetch_and_save_additional_data():
