@@ -44,6 +44,7 @@ def geocoding(address):
     json_data = response.json()
     results = json_data['results']
     if len(results) == 0:
+        logger.error(f"airbox - {address} is an invalid address")
         raise HTTPException(status_code=400, detail='Invalid address')
     location = results[0]['geometry']['location']
     latlon = [location['lat'], location['lng']]

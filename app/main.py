@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import airBox
 from additional import fetch_and_save_additional_data
-from constants import total_plot_name, total_plot_path, pm25_average_plot_name, pm25_average_plot_path
+from constants import total_plot_name, total_plot_path, pm25_average_plot_name, pm25_average_plot_path, logger
 
 scheduler = AsyncIOScheduler()
 
@@ -41,4 +41,5 @@ def get_plot(plot_name: str):
         return FileResponse(pm25_average_plot_path)
 
     # for unknown plot
+    logger.error(f"{plot_name} not found")
     raise HTTPException(status_code=404, detail="Plot not found")
